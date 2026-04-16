@@ -133,6 +133,7 @@ const zoomBehavior = d3.zoom()
 svg.call(zoomBehavior);
 
 const g = rotWrapper.append('g');
+svg.call(zoomBehavior.transform, d3.zoomIdentity.translate(W / 2, H / 2));
 
 // Dashed guide circles — radius is updated every tick
 const guideLayer = g.append('g');
@@ -207,6 +208,7 @@ const simulation = d3.forceSimulation(GRAPH_DATA.nodes)
   .force('collision', d3.forceCollide(7).strength(0.5))
   .alphaDecay(0.012)
   .on('tick', ticked);
+
 
 function ticked() {
   projectRings();    // enforce circle shape + dynamic radius
@@ -362,31 +364,27 @@ document.getElementById('btn-zoom-in').addEventListener('click',
 document.getElementById('btn-zoom-out').addEventListener('click',
   () => svg.transition().call(zoomBehavior.scaleBy, 0.67));
 document.getElementById('btn-zoom-reset').addEventListener('click',
-  () => svg.transition().duration(500).call(
-    zoomBehavior.transform, d3.zoomIdentity.translate(W / 2, H / 2).scale(0.85)));
+  () => svg.transition().call(zoomBehavior.transform, d3.zoomIdentity));
 
-svg.call(zoomBehavior.transform, d3.zoomIdentity.translate(W / 2, H / 2).scale(0.85));
-
-// ── Rotation buttons ────────────────────────────────────────────
-const rotResetBtn = document.getElementById('btn-rot-reset');
-function updateRotLabel() {
-  const norm = ((rotationDeg % 360) + 360) % 360;
-  rotResetBtn.textContent = norm === 0 ? '0°' : norm + '°';
-}
+// \u2500\u2500 Rotation buttons \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 document.getElementById('btn-rot-ccw').addEventListener('click', () => {
   rotationDeg = (rotationDeg - 15 + 360) % 360;
-  applyRotation(); updateRotLabel();
+  document.getElementById('rot-label').textContent = rotationDeg + '°';
+  applyRotation();
 });
 document.getElementById('btn-rot-cw').addEventListener('click', () => {
   rotationDeg = (rotationDeg + 15) % 360;
-  applyRotation(); updateRotLabel();
+  document.getElementById('rot-label').textContent = rotationDeg + '°';
+  applyRotation();
 });
-rotResetBtn.addEventListener('click', () => {
-  rotationDeg = 0; applyRotation(); updateRotLabel();
+document.getElementById('btn-rot-reset').addEventListener('click', () => {
+  rotationDeg = 0;
+  document.getElementById('rot-label').textContent = '0°';
+  applyRotation();
 });
 
+// ── Zoom-dependent label visibility ────────────────────────────────────────────────────────────
 svg.on('zoom.labels', e => {
   nodeEl.selectAll('text')
-    .style('display', e.transform.k < 0.8 ? 'none' : null)
     .style('font-size', `${Math.max(6, 11 / e.transform.k)}px`);
 });

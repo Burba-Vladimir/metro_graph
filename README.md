@@ -11,7 +11,6 @@ whose radii emerge dynamically from the simulation.
 ## Quick start
 
 Just open `metro_graph.html` in any modern browser — no server, no dependencies, everything is bundled.
-Or you can open it via link: https://metro-graph.vercel.app/
 
 ## Controls
 
