@@ -4,7 +4,7 @@ with open('data/metro_graph.json', encoding='utf-8') as f:
     graph_data = json.load(f)
 
 with open('vendor/d3.min.js', encoding='utf-8') as f:
-    d3_src = f.read()
+    d3_src = f.read().replace(']]>', ']]\\u003e')
 
 with open('src/metro_vis.js', encoding='utf-8') as f:
     vis_src = f.read()
